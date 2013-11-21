@@ -24,6 +24,8 @@
         <link rel="stylesheet" href="css/main.css">
 
         <script src="js/vendor/modernizr-2.6.1-respond-1.1.0.min.js"></script>
+
+
     </head>
     <body style="margin-bottom: 0px; padding-bottom: 0px;">
         <!--[if lt IE 7]>
@@ -32,42 +34,14 @@
 
         <!-- Content -->
         <div class="row-fluid">
-            <!-- Header -->
             <div class="row-fluid">
-                <div class="span12">
-                    <div class="navbar navbar-inverse navbar-fixed-top">
-                        <div class="navbar-inner">
-                                <a class="brand" href="./index.html">&nbsp;&nbsp;&nbsp;<i class="icon-comment icon-white"></i>&nbsp;SimpleChat&nbsp;</a>
-                                <ul class="nav pull-right">
-                                    <li class="divider-vertical"></li>
-                                    <li class="">
-                                        <a href="http://github.com/tegioz/chat" data-toggle="modal"><i class="icon-star icon-white"></i>&nbsp;Fork me on Github&nbsp;</a>
-                                    </li>
-                                </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End Header -->
-
-            <!-- Rooms -->
-            <div class="row-fluid">
-                <div class="span12 well" style="background-color:white; border:0px"> 
+                <div class="span12 well" style="background-color:white; border:0px">
                     <!-- Tabs -->
                     <div class="row-fluid">
                         <div class="span12">
                             <ul id="rooms_tabs" class="nav nav-tabs">
-                                <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="icon-th"></i>&nbsp;Options&nbsp;<b class="caret"></b></a>
-                                    <ul class="dropdown-menu">
-                                        <li><a href="#modal_joinroom" data-toggle="modal"><i class="icon-plus"></i>&nbsp;Join room</a></li>
-                                        <li><a id="b_leave_room" href="#"><i class="icon-minus"></i>&nbsp;Leave current room</a></li>
-                                        <li class="divider"></li>
-                                        <li><a href="#modal_setnick" data-toggle="modal"><i class="icon-user"></i>&nbsp;Set nickname</a></li>
-                                    </ul>
-                                </li>
                                 <!-- Room tab -->
-                                <li id="MainRoom_tab" class="active"><a href="#MainRoom" data-toggle="tab">MainRoom</a></li>
+                                <li id="tab" class="active"><a href="" data-toggle="tab"></a></li>
                                 <!-- End Room tab -->
                             </ul>
                         </div>
@@ -106,7 +80,7 @@
 
             <!-- New message input -->
             <div class="row-fluid">
-                <div class="span12"> 
+                <div class="span12">
                     <div class="navbar">
                         <div class="navbar-inner">
                             <form class="navbar-form">
@@ -120,62 +94,15 @@
             <!-- End New message -->
 
             <!-- Info -->
-            <div class="row-fluid">
-                <div class="span12">
-                    <div class="hero-unit" style="margin:20px; padding:60px;">
-                        <h1 style="font-size:50px">SimpleChat <small>(but powerful) built with...</small></h1>
-                        <br/>
-                        <p style="margin-bottom: 0px"><i class="icon-tasks"></i><strong> Server side:</strong> Node.js, Socket.io, Express, Redis</p>
-                        <p><i class="icon-picture"></i><strong> Client side:</strong> HTML5 Boilerplate, Bootstrap, Handlebars and jQuery</p>
-                        </br>
-                        <p><a href="http://github.com/tegioz/chat" class="btn btn-success btn-large pull-right">Fork me on Github</a></p>
-                    </div>
-                </div>
-            </div>
+
             <!-- End Info -->
 
             <!-- Footer -->
-            <div class="row-fluid">
-                <div class="span12"> 
-                    <p class="pull-right"><a href="mailto:sergio.castano.arteaga@gmail.com"><small>Sergio Castaño Arteaga</small></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                </div>
-            </div>
+
             <!--<div style="position:absolute; background-color:black; width:100%; height:10px; bottom:0px;"></div>-->
             <!-- End Footer -->
         </div>
         <!-- End Content -->
-
-        <!-- Join room modal -->
-        <div id="modal_joinroom" class="modal hide fade">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>Join room</h3>
-            </div>
-            <div class="modal-body">
-                <input id="room_name" type="text" class="input-xlarge" placeholder="Room name">
-                <p><small>Room will be created if it doesn't exist</small></p>
-            </div>
-            <div class="modal-footer">
-                <a id="b_join_room" href="#" class="btn btn-primary">Join now</a>
-            </div>
-        </div>
-        <!-- End Join room modal -->
-
-        <!-- Set nick modal -->
-        <div id="modal_setnick" class="modal hide fade">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h3>Set nickname</h3>
-            </div>
-            <div class="modal-body">
-                <input id="nickname" type="text" class="input-xlarge" placeholder="Type your nickname here">
-                <p><small>Pick up something more cool than anonymous :)</small></p>
-            </div>
-            <div class="modal-footer">
-                <a id="b_set_nickname" href="#" class="btn btn-primary">Set nickname</a>
-            </div>
-        </div>
-        <!-- End Set nick modal -->
 
         <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
         <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.8.1.min.js"><\/script>')</script>

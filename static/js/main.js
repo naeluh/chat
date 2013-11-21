@@ -9,8 +9,8 @@
     // ***************************************************************************
     // Socket.io events
     // ***************************************************************************
-    
-    var socket = io.connect('http://localhost:8888');
+
+    var socket = io.connect('http://hulea.org:8886');
 
     // Connection established
     socket.on('connected', function (data) {
@@ -39,7 +39,7 @@
         var info = {'room':'MainRoom', 'username':'ServerBot', 'msg':'----- Lost connection to server -----'};
         addMessage(info);
     });
-    
+
     // Reconnected to server
     socket.on('reconnect', function (data) {
         var info = {'room':'MainRoom', 'username':'ServerBot', 'msg':'----- Reconnected to server -----'};
@@ -50,12 +50,12 @@
     socket.on('subscriptionConfirmed', function(data) {
         // Create room space in interface
         if (!roomExists(data.room)) {
-            addRoomTab(data.room);
+          //  addRoomTab(data.room);
             addRoom(data.room);
         }
 
         // Close modal if opened
-        $('#modal_joinroom').modal('hide');
+        //$('#modal_joinroom').modal('hide');
     });
 
     // Unsubscription to room confirmed
@@ -72,7 +72,7 @@
         console.log("userJoinsRoom: %s", JSON.stringify(data));
         // Log join in conversation
         addMessage(data);
-    
+
         // Add user to connected users list
         addUser(data);
     });
@@ -120,12 +120,12 @@
     // ***************************************************************************
     // Templates and helpers
     // ***************************************************************************
-    
+
     var templates = {};
     var getTemplate = function(path, callback) {
         var source;
         var template;
- 
+
         // Check first if we've the template cached
         if (_.has(templates, path)) {
             if (callback) callback(templates[path]);
@@ -161,7 +161,7 @@
     var addRoom = function(room) {
         getTemplate('js/templates/room.handlebars', function(template) {
             $('#rooms').append(template({'room':room}));
-        
+
             // Toogle to created room
             var newroomtab = '[href="#'+room+'"]';
             $(newroomtab).click();
@@ -170,7 +170,7 @@
             socket.emit('getUsersInRoom', {'room':room});
         });
     };
-    
+
     // Remove room
     var removeRoom = function(room) {
         var room_id = "#"+room;
@@ -184,7 +184,7 @@
             $(room_messages).append(template(msg));
         });
     };
-    
+
     // Add user to connected users list
     var addUser = function(user) {
         getTemplate('js/templates/user.handlebars', function(template) {
@@ -255,35 +255,6 @@
         if ($('#message_text').val() != "") {
             socket.emit('newMessage', {'room':getCurrentRoom(), 'msg':getMessageText()});
         }
-    });
-
-    // Join new room
-    $('#b_join_room').click(function(eventObject) {
-        eventObject.preventDefault();
-        socket.emit('subscribe', {'rooms':[getRoomName()]}); 
-    });
-
-    // Leave current room
-    $('#b_leave_room').click(function(eventObject) {
-        eventObject.preventDefault();
-        var currentRoom = getCurrentRoom();
-        if (currentRoom != 'MainRoom') {
-            socket.emit('unsubscribe', {'rooms':[getCurrentRoom()]}); 
-
-            // Toogle to MainRoom
-            $('[href="#MainRoom"]').click();
-        } else {
-            console.log('Cannot leave MainRoom, sorry');
-        }
-    });
-
-    // Set nickname
-    $('#b_set_nickname').click(function(eventObject) {
-        eventObject.preventDefault();
-        socket.emit('setNickname', {'username':getNickname()});
-
-        // Close modal if opened
-        $('#modal_setnick').modal('hide');
     });
 
 })();
