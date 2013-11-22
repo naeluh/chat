@@ -1,4 +1,22 @@
 <!-- Room -->
+<!-- Content -->
+<div class="row-fluid {{room}}">
+<div class="row-fluid">
+    <div class="span12 well" style="background-color:white; border:0px">
+        <!-- Tabs -->
+        <div class="row-fluid">
+            <div class="span12">
+                <ul id="rooms_tabs" class="nav nav-tabs">
+                    <!-- Room tab -->
+                    <li id="{{room}}_tab"><a href="#{{room}}" data-toggle="tab">{{room}}</a></li>
+                    <!-- End Room tab -->
+                </ul>
+            </div>
+        </div>
+        <!-- End Tabs -->
+        <!-- Rooms -->
+        <div id="rooms" class="tab-content">
+            <!-- Room -->
 <div class="tab-pane" id="{{room}}">
     <div class="row-fluid">
         <div class="span12 well">
@@ -12,10 +30,27 @@
             <h3>Now chatting...</h3>
         </div>
     </div>
-    <div class="row-fluid">
-        <div id="room_users" class="span12">
-            <span class="badge badge-inverse">ServerBot</span>
+</div>
+<!-- End Room -->
+        </div>
+        <!-- End Rooms -->
+    </div>
+</div>
+<!-- End Rooms -->
+<!-- New message input -->
+<div class="row-fluid">
+    <div class="span12">
+        <div class="navbar">
+            <div class="navbar-inner">
+                <form class="navbar-form">
+                    <input id="message_text" type="text" class="span9">
+                    <button id="b_send_message" class="btn btn-primary">Send</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+</div>
+<!-- End New message -->
+<!-- End Content -->
 <!-- End Room -->

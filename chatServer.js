@@ -7,7 +7,7 @@
 // ***************************************************************************
 
 var conf = {
-    port: 8886,
+    port: 8885,
     debug: false,
     dbPort: 6379,
     dbHost: '127.0.0.1',
@@ -118,7 +118,7 @@ io.sockets.on('connection', function(socket) {
     // Store user data in db
     db.hset([socket.id, 'connectionDate', new Date()], redis.print);
     db.hset([socket.id, 'socketID', socket.id], redis.print);
-    db.hset([socket.id, 'username', 'anonymous'], redis.print);
+    //db.hset([socket.id, 'username' ], redis.print);
 
     // Join user to 'MainRoom'
     //socket.join(conf.mainroom);
@@ -129,8 +129,37 @@ io.sockets.on('connection', function(socket) {
     //var data = {'room':conf.mainroom, 'username':'anonymous', 'msg':'----- Joined the room -----', 'id':socket.id};
     //io.sockets.in(conf.mainroom).emit('userJoinsRoom', data);
 
+    // User wants to change his nickname
+    /*socket.on('setNickname', function(data) {
+
+            // Store user data in db
+            //db.hset([socket.id, 'username', data.username], redis.print);
+            logger.emit('newEvent', 'userSetsNickname', {'socket':socket.id, 'newUsername':data.username});
+
+            // Notify all users who belong to the same rooms that this one
+            _.each(_.keys(io.sockets.manager.roomClients[socket.id]), function(room) {
+                room = room.substr(1); // Forward slash before room name (socket.io)
+                if (room) {
+                    var info = {'room':room, 'Username':data.username, 'id':socket.id};
+                    io.sockets.in(room).emit('userNicknameUpdated', info);
+                }
+            });
+    });*/
+
     // User wants to subscribe to [data.rooms]
     socket.on('subscribe', function(data) {
+        // Store user data in db
+        db.hset([socket.id, 'username', data.username], redis.print);
+        logger.emit('newEvent', 'userSetsNickname', {'socket':socket.id, 'newUsername':data.username});
+
+            // Notify all users who belong to the same rooms that this one
+            _.each(_.keys(io.sockets.manager.roomClients[socket.id]), function(room) {
+                room = room.substr(1); // Forward slash before room name (socket.io)
+                if (room) {
+                    var info = {'room':room, 'Username':data.username, 'id':socket.id};
+                    io.sockets.in(room).emit('userNicknameUpdated', info);
+                }
+            });
         // Get user info from db
         db.hget([socket.id, 'username'], function(err, username) {
 
@@ -138,13 +167,16 @@ io.sockets.on('connection', function(socket) {
             _.each(data.rooms, function(room) {
                 room = room.replace(" ","");
                 socket.join(room);
+
                 logger.emit('newEvent', 'userJoinsRoom', {'socket':socket.id, 'username':username, 'room':room});
 
                 // Confirm subscription to user
                 socket.emit('subscriptionConfirmed', {'room': room});
 
+                db.hset([socket.id, 'room', room], redis.print);
+
                 // Notify subscription to all users in room
-                var message = {'room':room, 'username':username, 'msg':'----- Joined the room -----', 'id':socket.id};
+                var message = {'username':username, 'msg':'----- Joined the room -----', 'id':socket.id};
                 io.sockets.in(room).emit('userJoinsRoom', message);
             });
         });
@@ -191,26 +223,6 @@ io.sockets.on('connection', function(socket) {
                 }
             });
         }
-    });
-
-    // User wants to change his nickname
-    socket.on('setNickname', function(data) {
-        // Get user info from db
-        db.hget([socket.id, 'username'], function(err, username) {
-
-            // Store user data in db
-            db.hset([socket.id, 'username', data.username], redis.print);
-            logger.emit('newEvent', 'userSetsNickname', {'socket':socket.id, 'oldUsername':username, 'newUsername':data.username});
-
-            // Notify all users who belong to the same rooms that this one
-            _.each(_.keys(io.sockets.manager.roomClients[socket.id]), function(room) {
-                room = room.substr(1); // Forward slash before room name (socket.io)
-                if (room) {
-                    var info = {'room':room, 'oldUsername':username, 'newUsername':data.username, 'id':socket.id};
-                    io.sockets.in(room).emit('userNicknameUpdated', info);
-                }
-            });
-        });
     });
 
     // New message sent to group

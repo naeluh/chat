@@ -1,16 +1,25 @@
 
-// Author: Sergio Castaño Arteaga
-// Email: sergio.castano.arteaga@gmail.com
-
 (function(){
 
     var debug = false;
+
+    var socket = io.connect('http://hulea.org:8885');
+
+    // ***************************************************************************
+    // URL Handling
+    // ***************************************************************************
+
+    if(window.location.hash) {
+     alert('hash'+document.URL);
+    } else {
+     alert('no hash'+document.URL);
+    }
 
     // ***************************************************************************
     // Socket.io events
     // ***************************************************************************
 
-    var socket = io.connect('http://hulea.org:8886');
+
 
     // Connection established
     socket.on('connected', function (data) {
@@ -50,19 +59,19 @@
     socket.on('subscriptionConfirmed', function(data) {
         // Create room space in interface
         if (!roomExists(data.room)) {
-          //  addRoomTab(data.room);
+            //addRoomTab(data.room);
             addRoom(data.room);
         }
 
         // Close modal if opened
-        //$('#modal_joinroom').modal('hide');
+        $('#modal_joinroom').modal('hide');
     });
 
     // Unsubscription to room confirmed
     socket.on('unsubscriptionConfirmed', function(data) {
         // Remove room space in interface
         if (roomExists(data.room)) {
-            removeRoomTab(data.room);
+            //removeRoomTab(data.room);
             removeRoom(data.room);
         }
     });
@@ -91,12 +100,6 @@
     socket.on('newMessage', function (data) {
         console.log("newMessage: %s", JSON.stringify(data));
         addMessage(data);
-
-        // Scroll down room messages
-        var room_messages = '#'+data.room+' #room_messages';
-        $(room_messages).animate({
-            scrollTop: $(room_messages).height()
-        }, 300);
     });
 
     // Users in room received
@@ -106,7 +109,7 @@
             addUser(user);
         });
     });
-
+/*
     // User nickname updated
     socket.on('userNicknameUpdated', function(data) {
         console.log("userNicknameUpdated: %s", JSON.stringify(data));
@@ -116,6 +119,7 @@
         var info = {'room':data.room, 'username':'ServerBot', 'msg':msg};
         addMessage(info);
     });
+*/
 
     // ***************************************************************************
     // Templates and helpers
@@ -157,19 +161,7 @@
         $(tab_id).remove();
     };
 
-    // Add room
-    var addRoom = function(room) {
-        getTemplate('js/templates/room.handlebars', function(template) {
-            $('#rooms').append(template({'room':room}));
 
-            // Toogle to created room
-            var newroomtab = '[href="#'+room+'"]';
-            $(newroomtab).click();
-
-            // Get users connected to room
-            socket.emit('getUsersInRoom', {'room':room});
-        });
-    };
 
     // Remove room
     var removeRoom = function(room) {
@@ -208,7 +200,7 @@
         var room_selector = '#'+room;
         if ($(room_selector).length) {
             return true;
-        } else {
+        } else {
             return false;
         }
     };
@@ -245,17 +237,52 @@
         $(badges).text(data.newUsername);
     };
 
+        // Add room
+    var addRoom = function(room) {
+        getTemplate('js/templates/room.handlebars', function(template) {
+            $('#room_container').append(template({'room':room}));
+
+            // Toogle to created room
+            var newroomtab = '[href="#'+room+'"]';
+            $(newroomtab).click();
+
+            // Get users connected to room
+            socket.emit('getUsersInRoom', {'room':room});
+
+                $('#b_send_message').click(function(eventObject) {
+
+        if ($('#message_text').val() != "") {
+            socket.emit('newMessage', {'room':getCurrentRoom(), 'msg':getMessageText()});
+        }
+         eventObject.preventDefault();
+    });
+
+        });
+    };
+
     // ***************************************************************************
     // Events
     // ***************************************************************************
 
-    // Send new message
-    $('#b_send_message').click(function(eventObject) {
-        eventObject.preventDefault();
-        if ($('#message_text').val() != "") {
-            socket.emit('newMessage', {'room':getCurrentRoom(), 'msg':getMessageText()});
-        }
+    // Join new room
+  //  if (checkInput() === true){
+    $('#b_join_room').click(function(eventObject) {
+        socket.emit('subscribe', {'username':[getNickname()] ,'rooms':[getRoomName()] } );
+        $('header').remove();
+                eventObject.preventDefault();
+
     });
+  //  }
 
+    // check if input is empty
+ /*   var checkInput = function () {
+        if ($('header input').val() > 0) {
+            return true;
+        } else {
+            $(".alert").alert();
+            return false;
+        }
+
+    };
+*/
 })();
-
